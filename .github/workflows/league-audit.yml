@@ -1,0 +1,43 @@
+# League meta-audit on GitHub-hosted runners (offloads ~35 min of CPU from the local machine).
+# Trigger manually: GitHub → Actions → "League Audit" → Run workflow (or: gh workflow run league-audit.yml)
+# Seeds are deterministic (Task S), so the cloud result is expected to be identical to a local run
+# on the same Node major version.
+name: League Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      matches:
+        description: "Matches per pairing"
+        default: "10"
+        required: false
+      minutes:
+        description: "Minutes per match"
+        default: "10"
+        required: false
+      sheets:
+        description: "Comma-separated sheet filter (empty = all 12)"
+        default: ""
+        required: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run league audit
+        run: |
+          ARGS="--md --matches ${{ inputs.matches }} --minutes ${{ inputs.minutes }}"
+          if [ -n "${{ inputs.sheets }}" ]; then ARGS="$ARGS --sheets ${{ inputs.sheets }}"; fi
+          npm run league:audit -- $ARGS
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: league-audit-report
+          path: reports/league-audit-latest.md

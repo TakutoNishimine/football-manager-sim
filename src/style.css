@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  background: #111827;
+  color: #e5e7eb;
+  font-family: -apple-system, 'Hiragino Sans', sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 14px;
+  background: #1f2937;
+  flex-wrap: wrap;
+}
+
+#toolbar button {
+  background: #374151;
+  color: #e5e7eb;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#toolbar button:hover {
+  background: #4b5563;
+}
+
+#toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  user-select: none;
+}
+
+.tactics {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 14px;
+  background: #1f2937;
+  flex-wrap: wrap;
+  border-top: 1px solid #374151;
+}
+
+.tactics input[type='range'] {
+  width: 70px;
+}
+
+.tactics label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  user-select: none;
+}
+
+.tactics.team0 {
+  border-left: 4px solid #3b82f6;
+  accent-color: #3b82f6;
+}
+
+.tactics.team1 {
+  border-left: 4px solid #ef4444;
+  accent-color: #ef4444;
+}
+
+.teamLabel {
+  font-weight: bold;
+  font-size: 13px;
+  min-width: 1.5em;
+}
+
+.tactics.team0 .teamLabel {
+  color: #3b82f6;
+}
+
+.tactics.team1 .teamLabel {
+  color: #ef4444;
+}
+
+#seedBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #374151;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#seedBadge:hover {
+  background: #4b5563;
+}
+
+#seedBadge code {
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+#seedControl input[type='number'] {
+  width: 130px;
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  padding: 5px 6px;
+  font-size: 13px;
+}
+
+#score {
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: auto;
+}
+
+#clock {
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+
+#pitchContainer {
+  flex: 1;
+  min-height: 0;
+}
+
+#pitch {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none; /* タッチ操作をドラッグ指示に使う */
+}
+
+#help {
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #9ca3af;
+  background: #1f2937;
+}

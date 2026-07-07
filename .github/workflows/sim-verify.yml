@@ -1,0 +1,44 @@
+# Standard verification suite on GitHub-hosted runners — offloads the per-task
+# checkpoint computations (determinism + regression + tracking + event benchmark).
+# Runs automatically on pushed task branches, or manually against any ref:
+#   gh workflow run sim-verify.yml --ref <branch>
+# Total ~5 min per run. Seeds are deterministic (Task S), so results match local runs.
+name: Sim Verify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "task-**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        # Explicit bash enables pipefail, so a FAIL exit code from a script is
+        # not swallowed by the `| tee` pipes below and actually fails the job.
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Determinism check
+        run: npm run check:determinism | tee out-determinism.txt
+      - name: Headless regression (40 matches)
+        run: npx tsx scripts/regression.ts | tee out-regression.txt
+      - name: Tracking benchmark
+        run: npm run bench:tracking | tee out-tracking.txt
+      - name: Event benchmark (StatsBomb comparison)
+        run: npx tsx scripts/benchmark/run.ts | tee out-event.txt
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-verify-results
+          path: out-*.txt

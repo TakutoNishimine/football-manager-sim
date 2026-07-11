@@ -1,0 +1,24 @@
+{
+  "name": "football-manager",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "optimize": "tsx scripts/optimize.ts",
+    "check:determinism": "tsx scripts/check-determinism.ts",
+    "bench:tracking": "tsx scripts/benchmark/tracking/run.ts",
+    "league:audit": "tsx scripts/league/audit.ts",
+    "check:regression": "tsx scripts/regression.ts",
+    "league:fixture": "tsx scripts/league/fixture.ts",
+    "league:contrast": "tsx scripts/league/contrast.ts",
+    "debug:inspect": "tsx scripts/debug/inspect-match.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  }
+}

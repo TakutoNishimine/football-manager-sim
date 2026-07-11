@@ -1,0 +1,40 @@
+# Generic compute offload: run any committed script on a GitHub-hosted runner.
+# For parameter sweeps and other heavy batch jobs that would overheat the local machine.
+# Collaborator-only trigger (workflow_dispatch), so the free-form command input is acceptable
+# for this personal repo.
+#
+#   gh workflow run sim-run.yml --ref <branch> -f command="npx tsx scripts/sweep-w.ts"
+#   gh run watch && gh run download
+name: Sim Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Command to run from the repo root (after npm ci)"
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    defaults:
+      run:
+        # Explicit bash enables pipefail so a failing command isn't masked by `| tee`
+        # (Task AK caught two silent-green failures here before this fix).
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run command
+        run: ${{ inputs.command }} 2>&1 | tee out-run.txt
+      - name: Upload output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-run-output
+          path: out-run.txt

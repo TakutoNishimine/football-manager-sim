@@ -1,0 +1,4 @@
+node_modules
+dist
+scripts/best-weights.json
+scripts/benchmark/cache/
